@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'alexa_objects'
+gem 'alexa_couchpotato'
+gem 'alexa_hue'
+gem 'alexa_transmission'
+gem 'alexa_halo'
+gem 'alexa_sickbeard'
+gem 'foreman'
