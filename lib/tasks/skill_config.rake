@@ -1,4 +1,4 @@
-namespace :skill do
+namespace :skill_config do
   desc 'Generates sampl_utterance.txt witht the utterances from the selected gems'
   task generate_sample_utterances: :environment do
     gems = Bundler.require(:middleware)
