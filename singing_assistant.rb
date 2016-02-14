@@ -8,6 +8,7 @@ require 'rack/config'
 require 'yaml'
 require 'recursive-open-struct'
 
+
 class SingingAssistant < Sinatra::Base
   use Rack::PostBodyContentTypeParser
   

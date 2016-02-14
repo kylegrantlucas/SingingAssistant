@@ -1,3 +1,3 @@
-require File.dirname(__FILE__) + '/lib/singing_assistant.rb'
+require File.dirname(__FILE__) + '/singing_assistant.rb'
 
 run SingingAssistant
