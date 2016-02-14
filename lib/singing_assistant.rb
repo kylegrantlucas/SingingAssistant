@@ -27,6 +27,6 @@ class SingingAssistant < Sinatra::Base
   register Sinatra::Couchpotato
   register Sinatra::Hue
   # register Sinatra::Halo
-  # register Sinatra::Transmission
+  register Sinatra::Transmission
   # register Sinatra::Sickbeard
 end

@@ -5,7 +5,7 @@ gem 'foreman'
 group :middleware do
   gem 'alexa_couchpotato'
   gem 'alexa_hue'
-  # gem 'alexa_transmission'
+  gem 'alexa_transmission'
   # gem 'alexa_halo'
   # gem 'alexa_sickbeard'
 end
@@ -18,4 +18,3 @@ group :required do
   gem 'sinatra'
   gem 'rake'
 end
-
