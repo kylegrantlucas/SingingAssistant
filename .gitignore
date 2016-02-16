@@ -1,0 +1,6 @@
+config/config.yml
+.DS_Store
+skills_setup/*.txt
+skills_setup/*.json
+skills_setup/*.js
+*.zip

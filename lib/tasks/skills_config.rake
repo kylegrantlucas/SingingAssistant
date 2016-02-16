@@ -1,13 +1,15 @@
 require 'active_support'
 require 'active_support/core_ext/string'
+require "rake"
 
-namespace :skill_config do
+namespace :skills_config do
   desc 'Generates sample_utterance.txt witht the utterances from the selected gems'
   task :generate_sample_utterances do
     gems = Bundler.require(:middleware)
+    Dir.mkdir 'skills_setup' rescue nil
     alexa_gems = gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
     alexa_gems.each {|gem_name| require "#{gem_name}/sample_utterances"}
-    File.open('sample_utterances.txt', 'w') do |f|
+    File.open('./skills_setup/sample_utterances.txt', 'w') do |f|
       alexa_gems.each do |gem_name|
         f << Module.const_get("Sinatra::#{gem_name[6..-1].camelize}").sample_utterances
         f << "\n\n"
@@ -18,9 +20,10 @@ namespace :skill_config do
   desc 'Generates custom_slots.txt witht the utterances from the selected gems'
   task :generate_custom_slots do
     gems = Bundler.require(:middleware)
+    Dir.mkdir 'skills_setup' rescue nil
     alexa_gems = gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
     alexa_gems.each {|gem_name| require "#{gem_name}/custom_slots"}
-    File.open('custom_slots.txt', 'w') do |f|
+    File.open('./skills_setup/custom_slots.txt', 'w') do |f|
       alexa_gems.each do |gem_name|
         f << Module.const_get("Sinatra::#{gem_name[6..-1].capitalize}").custom_slots
         f << "\n\n"
@@ -31,9 +34,10 @@ namespace :skill_config do
   desc 'Generates intents_schema.txt witht the utterances from the selected gems'
   task :generate_intent_schema do
      gems = Bundler.require(:middleware)
+     Dir.mkdir 'skills_setup' rescue nil
     alexa_gems = gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
     alexa_gems.each {|gem_name| require "#{gem_name}/intent_schema"}
-    File.open('intent_schema.txt', 'w') do |f|
+    File.open('./skills_setup/intent_schema.json', 'w') do |f|
       schemas = []
       alexa_gems.each do |gem_name|
         schemas << JSON.parse(Module.const_get("Sinatra::#{gem_name[6..-1].camelize}").intent_schema)["intents"]
@@ -46,12 +50,13 @@ namespace :skill_config do
   desc 'Generates intents_schema.txt witht the utterances from the selected gems'
   task :generate_lambda_router do
     gems = Bundler.require(:middleware)
+    Dir.mkdir 'skills_setup' rescue nil
     alexa_gems = gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
     alexa_gems.each {|gem_name| require "#{gem_name}/intent_schema"}
     alexa_gems.each {|gem_name| require "#{gem_name}/endpoint"}
     strings = []
     
-    File.open('lambda_router.js', 'w') do |f|
+    File.open('./skills_setup/lambda_router.js', 'w') do |f|
       endpoints = {}
       alexa_gems.each do |gem_name|
         endpoints[gem_name] =

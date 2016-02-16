@@ -1,16 +1,11 @@
 require 'bundler'
-Bundler.require(:middleware, :required)
-require 'alexa_objects'
-require 'sinatra/base'
-require 'pry'
-require 'rack'
-require 'rack/config'
+Bundler.require(:middleware, :default)
+require 'sinatra/namespace'
 require 'yaml'
-require 'recursive-open-struct'
-
 
 class SingingAssistant < Sinatra::Base
   use Rack::PostBodyContentTypeParser
+  register Sinatra::Namespace
   
   configure do
     set :protection, :except => [:json_csrf]
@@ -19,15 +14,15 @@ class SingingAssistant < Sinatra::Base
   end
 
   before do
-    if request.request_method == "POST"
-      @echo_request = AlexaObjects::EchoRequest.new(request.params) 
-      @application_id = @echo_request.application_id
-    end
+    @echo_request = AlexaObjects::EchoRequest.new(request.params) if request.request_method == "POST"
   end
 
-  register Sinatra::Couchpotato
-  register Sinatra::Hue
-  # register Sinatra::Halo
-  # register Sinatra::Transmission
-  # register Sinatra::Sickbeard
+  proxy_namespace = settings.config.proxy_path if settings.config.proxy_path 
+  namespace proxy_namespace do
+    register Sinatra::Couchpotato
+    register Sinatra::Hue
+    # register Sinatra::Halo
+    #register Sinatra::Transmission
+    # register Sinatra::Sickbeard
+  end
 end
