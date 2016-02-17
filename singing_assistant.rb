@@ -1,12 +1,12 @@
 require 'bundler'
 Bundler.require(:middleware, :default)
-require 'sinatra/namespace'
+require './lib/helpers/application.rb'
+require 'json'
 require 'yaml'
 
 class SingingAssistant < Sinatra::Base
-  use Rack::PostBodyContentTypeParser
-  register Sinatra::Namespace
-  
+  alexa_plugin_gems.each { |gem_name| self.send(:register, Module.const_get(gem_name.camelize)) }
+
   configure do
     set :protection, :except => [:json_csrf]
     set :config, RecursiveOpenStruct.new(YAML.load_file('./config/config.yml'))
@@ -14,15 +14,16 @@ class SingingAssistant < Sinatra::Base
   end
 
   before do
-    @echo_request = AlexaObjects::EchoRequest.new(request.params) if request.request_method == "POST"
+    @echo_request = AlexaObjects::EchoRequest.new(JSON.parse(request.body.read)) if request.request_method == "POST"
   end
 
-  proxy_namespace = settings.config.proxy_path if settings.config.proxy_path 
-  namespace proxy_namespace do
-    register Sinatra::Couchpotato
-    register Sinatra::Hue
-    # register Sinatra::Halo
-    #register Sinatra::Transmission
-    # register Sinatra::Sickbeard
+  post (settings.config.proxy_path || '/') do
+    if @echo_request.launch_request?
+        AlexaObjects::Response.new(end_session: false, spoken_response: "Your Singing Assistant is ready.").to_json
+    elsif @echo_request.session_ended_request?
+      AlexaObjects::Response.new.to_json
+    else
+      self.send(@echo_request.intent_name.underscore.to_sym)
+    end
   end
 end

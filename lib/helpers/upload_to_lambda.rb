@@ -1,3 +1,4 @@
+def create_lambda_function
 @settings = RecursiveOpenStruct.new(YAML.load_file('./config/config.yml'))
 
 aws_client = Aws::Lambda::Client.new(
@@ -22,3 +23,4 @@ resp = aws_client.create_function({
     security_group_ids: ["SecurityGroupId"],
   },
 })
+end

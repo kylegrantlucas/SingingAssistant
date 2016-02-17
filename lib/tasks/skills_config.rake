@@ -11,7 +11,7 @@ namespace :skills_config do
     alexa_gems.each {|gem_name| require "#{gem_name}/sample_utterances"}
     File.open('./skills_setup/sample_utterances.txt', 'w') do |f|
       alexa_gems.each do |gem_name|
-        f << Module.const_get("Sinatra::#{gem_name[6..-1].camelize}").sample_utterances
+        f << Module.const_get("#{gem_name[6..-1].camelize}").sample_utterances
         f << "\n\n"
       end
     end
@@ -25,7 +25,7 @@ namespace :skills_config do
     alexa_gems.each {|gem_name| require "#{gem_name}/custom_slots"}
     File.open('./skills_setup/custom_slots.txt', 'w') do |f|
       alexa_gems.each do |gem_name|
-        f << Module.const_get("Sinatra::#{gem_name[6..-1].capitalize}").custom_slots
+        f << Module.const_get("#{gem_name[6..-1].capitalize}").custom_slots
         f << "\n\n"
       end
     end
@@ -40,7 +40,7 @@ namespace :skills_config do
     File.open('./skills_setup/intent_schema.json', 'w') do |f|
       schemas = []
       alexa_gems.each do |gem_name|
-        schemas << JSON.parse(Module.const_get("Sinatra::#{gem_name[6..-1].camelize}").intent_schema)["intents"]
+        schemas << JSON.parse(Module.const_get("#{gem_name[6..-1].camelize}").intent_schema)["intents"]
       end
 
       f << JSON.pretty_generate({"intents" => schemas.flatten(1)})
@@ -49,26 +49,9 @@ namespace :skills_config do
 
   desc 'Generates intents_schema.txt witht the utterances from the selected gems'
   task :generate_lambda_router do
-    gems = Bundler.require(:middleware)
     Dir.mkdir 'skills_setup' rescue nil
-    alexa_gems = gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
-    alexa_gems.each {|gem_name| require "#{gem_name}/intent_schema"}
-    alexa_gems.each {|gem_name| require "#{gem_name}/endpoint"}
-    strings = []
-    
     File.open('./skills_setup/lambda_router.js', 'w') do |f|
-      endpoints = {}
-      alexa_gems.each do |gem_name|
-        endpoints[gem_name] =
-                        {
-                          "url_endpoint" => Module.const_get("Sinatra::#{gem_name[6..-1].camelize}").endpoint, 
-                          "intents" => JSON.parse(Module.const_get("Sinatra::#{gem_name[6..-1].camelize}").intent_schema)["intents"].map { |x| x["intent"]}
-                        }
-
-        strings << endpoints[gem_name]["intents"].map do |intent|
-                     "'#{intent}': 'http://highasfuck.science#{endpoints[gem_name]["url_endpoint"]}'"
-                   end.flatten(1)
-      end
+      settings = RecursiveOpenStruct.new(YAML.load_file('./config/config.yml'))
 
       file_string = <<-FIN
 var http = require('http');
@@ -76,14 +59,7 @@ var URLParser = require('url');
  
 exports.handler = function (json, context) {
     try {
-        // A list of URL's to call for each applicationId
-        var handlers = {
-            'appId':'url',
-            #{strings.join(",\n            ")}
-        };
-        
-        // Look up the url to call based on the appId
-        var url = handlers[json.request.intent.name];
+        var url = 'http://#{settings.url}#{settings.proxy_path}/';
         if (!url) { context.fail("No url found for application id"); }
         var parts = URLParser.parse(url);
         
