@@ -59,7 +59,7 @@ var URLParser = require('url');
  
 exports.handler = function (json, context) {
     try {
-        var url = 'http://#{settings.url}#{settings.proxy_path}/';
+        var url = "http://#{settings.url}#{settings.proxy_path}";
         if (!url) { context.fail("No url found for application id"); }
         var parts = URLParser.parse(url);
         
