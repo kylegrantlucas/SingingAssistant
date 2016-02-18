@@ -28,6 +28,6 @@ class SingingAssistant < Sinatra::Base
   end
 
   def method_missing(method_name, *arguments, &block)
-    AlexaObjects::Response.new(spoken_response: "Sorry, I can't seem to find the function #{method_name.split('_').join(' ')}.").to_json
+    AlexaObjects::Response.new(spoken_response: "Sorry, I can't seem to find the function #{method_name.to_s.split('_').join(' ')}.").to_json
   end
 end
