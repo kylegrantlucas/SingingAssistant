@@ -26,8 +26,8 @@ class SingingAssistant < Sinatra::Base
       self.send(@echo_request.intent_name.underscore.to_sym)
     end
   end
-
-  def method_missing(method_name, *arguments, &block)
+  
+  def method_missing(method_name)
     AlexaObjects::Response.new(spoken_response: "Sorry, I can't seem to find the function #{method_name.to_s.split('_').join(' ')}.").to_json
   end
 end

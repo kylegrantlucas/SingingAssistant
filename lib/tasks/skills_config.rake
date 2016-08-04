@@ -1,6 +1,7 @@
 require 'active_support'
 require 'active_support/core_ext/string'
 require "rake"
+require './lib/helpers/upload_to_lambda'
 
 namespace :skills_config do
   desc 'Generates sample_utterance.txt witht the utterances from the selected gems'
@@ -47,7 +48,12 @@ namespace :skills_config do
     end
   end
 
-  desc 'Generates intents_schema.txt witht the utterances from the selected gems'
+  desc 'Generates the lambda router for use with AWS'
+  task :upload_lambda_router do
+    create_lambda_function
+  end
+
+  desc 'Generates the lambda router for use with AWS'
   task :generate_lambda_router do
     Dir.mkdir 'skills_setup' rescue nil
     File.open('./skills_setup/lambda_router.js', 'w') do |f|
