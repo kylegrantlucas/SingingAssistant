@@ -1,69 +1,25 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (4.2.5.1)
-      i18n (~> 0.7)
-      json (~> 1.7, >= 1.7.7)
-      minitest (~> 5.1)
-      thread_safe (~> 0.3, >= 0.3.4)
-      tzinfo (~> 1.1)
-    alexa_couchpotato (1.2.0)
-      activesupport
-      alexa_objects
-      chronic
-      httparty
-      json
-      numbers_in_words
-      sinatra-contrib
-    alexa_halo (0.1.0)
-      alexa_objects
-      halo_stats
-      sinatra-contrib
-    alexa_hue (1.0.2)
-      activesupport
-      alexa_objects
-      chronic
-      chronic_duration
-      httparty
-      json
-      numbers_in_words
-      sinatra
-    alexa_objects (1.0.5)
+    alexa_objects (1.0.7)
       recursive-open-struct
-    alexa_transmission (1.1.1)
-      activesupport
-      alexa_objects
-      sinatra-contrib
-      toname
-      transmission_api
+    aws-sdk (2.5.1)
+      aws-sdk-resources (= 2.5.1)
+    aws-sdk-core (2.5.1)
+      jmespath (~> 1.0)
+    aws-sdk-resources (2.5.1)
+      aws-sdk-core (= 2.5.1)
     backports (3.6.8)
-    chronic (0.10.2)
-    chronic_duration (0.10.6)
-      numerizer (~> 0.1.1)
-    curb (0.8.8)
-    foreman (0.78.0)
+    foreman (0.82.0)
       thor (~> 0.19.1)
-    halo_stats (1.0.3)
-      takeout (~> 1.0.4)
-    httparty (0.9.0)
-      multi_json (~> 1.0)
-      multi_xml
-    i18n (0.7.0)
-    json (1.8.3)
-    liquid (3.0.6)
-    minitest (5.8.4)
-    multi_json (1.11.2)
-    multi_xml (0.5.5)
-    numbers_in_words (0.4.0)
-      activesupport
-    numerizer (0.1.1)
-    oj (2.14.4)
+    jmespath (1.3.1)
+    multi_json (1.12.1)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rake (10.5.0)
+    rake (11.2.2)
     recursive-open-struct (1.0.1)
     sinatra (1.4.7)
       rack (~> 1.5)
@@ -71,35 +27,22 @@ GEM
       tilt (>= 1.3, < 3)
     sinatra-advanced-routes (0.5.3)
       sinatra (~> 1.0)
-    sinatra-contrib (1.4.6)
+    sinatra-contrib (1.4.7)
       backports (>= 2.0)
       multi_json
       rack-protection
       rack-test
       sinatra (~> 1.4.0)
       tilt (>= 1.3, < 3)
-    takeout (1.0.4)
-      curb (~> 0.8.8)
-      liquid
-      oj
     thor (0.19.1)
-    thread_safe (0.3.5)
-    tilt (2.0.2)
-    toname (0.1.2)
-    transmission_api (0.0.7)
-      httparty (= 0.9.0)
-    tzinfo (1.2.2)
-      thread_safe (~> 0.1)
+    tilt (2.0.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  alexa_couchpotato
-  alexa_halo
-  alexa_hue
   alexa_objects
-  alexa_transmission
+  aws-sdk
   foreman
   rake
   recursive-open-struct
@@ -108,4 +51,4 @@ DEPENDENCIES
   sinatra-contrib
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
