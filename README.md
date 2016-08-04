@@ -1,4 +1,6 @@
 # SingingAssistant
+[![Code Climate](https://codeclimate.com/github/kylegrantlucas/SingingAssistant/badges/gpa.svg)](https://codeclimate.com/github/kylegrantlucas/SingingAssistant)
+
 A Sinatra server for local Alexa commands 🎤
 
 ## Install
