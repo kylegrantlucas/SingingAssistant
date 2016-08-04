@@ -17,7 +17,7 @@ class SingingAssistant < Sinatra::Base
     @echo_request = AlexaObjects::EchoRequest.new(JSON.parse(request.body.read)) if request.request_method == "POST"
   end
 
-  post (settings.config.proxy_path || '/') do
+  post(settings.config.proxy_path || '/') do
     if @echo_request.launch_request?
         AlexaObjects::Response.new(end_session: false, spoken_response: "Your Singing Assistant is ready.").to_json
     elsif @echo_request.session_ended_request?
