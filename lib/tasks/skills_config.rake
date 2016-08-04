@@ -3,12 +3,15 @@ require 'active_support/core_ext/string'
 require "rake"
 require './lib/helpers/upload_to_lambda'
 
+def parse_alexa_gems
+  gems = Bundler.require(:middleware)
+  Dir.mkdir 'skills_setup' rescue nil
+  gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
+end
+
 namespace :skills_config do
   desc 'Generates sample_utterance.txt witht the utterances from the selected gems'
   task :generate_sample_utterances do
-    gems = Bundler.require(:middleware)
-    Dir.mkdir 'skills_setup' rescue nil
-    alexa_gems = gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
     alexa_gems.each {|gem_name| require "#{gem_name}/sample_utterances"}
     File.open('./skills_setup/sample_utterances.txt', 'w') do |f|
       alexa_gems.each do |gem_name|
@@ -20,9 +23,7 @@ namespace :skills_config do
 
   desc 'Generates custom_slots.txt witht the utterances from the selected gems'
   task :generate_custom_slots do
-    gems = Bundler.require(:middleware)
-    Dir.mkdir 'skills_setup' rescue nil
-    alexa_gems = gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
+    alexa_gems = parse_alexa_gems
     alexa_gems.each {|gem_name| require "#{gem_name}/custom_slots"}
     File.open('./skills_setup/custom_slots.txt', 'w') do |f|
       alexa_gems.each do |gem_name|
@@ -34,9 +35,7 @@ namespace :skills_config do
 
   desc 'Generates intents_schema.txt witht the utterances from the selected gems'
   task :generate_intent_schema do
-     gems = Bundler.require(:middleware)
-     Dir.mkdir 'skills_setup' rescue nil
-    alexa_gems = gems.map{|x|x.name}.select{|x|x[0...6]=="alexa_"}-['alexa_objects']
+    alexa_gems = parse_alexa_gems
     alexa_gems.each {|gem_name| require "#{gem_name}/intent_schema"}
     File.open('./skills_setup/intent_schema.json', 'w') do |f|
       schemas = []

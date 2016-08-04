@@ -46,7 +46,7 @@ def create_lambda_function
     role = iam_client.create_role(user_name: 'singing_assistant_execution',assume_role_policy_document: @trust_role_policy).role
     iam_client.put_role_policy(role_name: 'singing_assistant_execution', policy_name:"lambda_execution", policy_document: @policy_document)
 
-    function = lambda_client.create_function({
+    lambda_client.create_function({
       function_name: "SingingAssistantRouter",
       runtime: "nodejs",
       role: role.arn,
